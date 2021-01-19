@@ -100,6 +100,5 @@ func (obj *Goods) AddStock(stock int) {
 
 // AddVersion .
 func (obj *Goods) AddVersion(version int) {
-	obj.Version += version
 	obj.update("version", gorm.Expr("version + ?", version))
 }
