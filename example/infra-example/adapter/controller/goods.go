@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/8treenet/freedom/example/infra-example/common"
 	"github.com/8treenet/freedom/example/infra-example/domain"
 	"github.com/8treenet/freedom/example/infra-example/domain/event"
 	"github.com/8treenet/freedom/example/infra-example/infra/domainevent"
@@ -18,7 +19,13 @@ func init() {
 	//重试消费事件
 	domainevent.GetEventManager().RetrySubEvent(&event.ShopGoods{}, func(shopGoodsEvent *event.ShopGoods) {
 		freedom.ServiceLocator().Call(func(goodsSev *domain.GoodsService) {
-			goodsSev.ShopEvent(shopGoodsEvent)
+			for i := 0; i < 3; i++ {
+				err := goodsSev.ShopEvent(shopGoodsEvent)
+				if err == common.VersionExpired {
+					continue //乐观锁重试
+				}
+				break
+			}
 		})
 	})
 }
