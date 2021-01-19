@@ -70,7 +70,6 @@ func (obj *Goods) SetStock(stock int) {
 
 // SetVersion .
 func (obj *Goods) SetVersion(version int) {
-	obj.Version = version
 	obj.update("version", version)
 }
 
